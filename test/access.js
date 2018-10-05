@@ -3,11 +3,14 @@ const ObjectStore = require('../index.js').ObjectStore;
 
 let _os;
 let _ctr = 0;
+let _someProperty = 'Ä\'/"ß"';
+
 function onCreate(id, obj) {
 	_ctr++;
 	if (obj == null) obj = {};
 	if (typeof obj === 'object') {
 		obj.id = id;
+		obj[_someProperty] = 42;
 	}
 	return obj;
 }
@@ -41,5 +44,18 @@ describe('ObjectStore access',()=>{
 
 		obj1.should.have.property('id').equal('1');
 		obj2.should.have.property('id').equal('2');
+
+		obj1.should.have.property(_someProperty).equal(42);
+		obj2.should.have.property(_someProperty).equal(42);
+	});
+	it('should update objects', async () => {
+		const obj1 = await _os.update(`1/${encodeURIComponent(_someProperty)}`, 123);
+		const obj2 = await _os.update(['2',_someProperty], 456);
+
+		should.exist(obj1);
+		should.exist(obj2);
+
+		obj1.should.have.property(_someProperty).equal(123);
+		obj2.should.have.property(_someProperty).equal(456);
 	});
 });
