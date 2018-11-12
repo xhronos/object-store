@@ -58,4 +58,28 @@ describe('ObjectStore access',()=>{
 		obj1.should.have.property(_someProperty).equal(123);
 		obj2.should.have.property(_someProperty).equal(456);
 	});
+	it('should delete object part', async () => {
+		const obj1 = await _os.delete(`1/${encodeURIComponent(_someProperty)}`);
+
+		should.exist(obj1);
+		obj1.should.not.have.property(_someProperty);
+
+		const obj = await _os.get('1');
+		should.exist(obj);
+		obj.should.not.have.property(_someProperty);
+	});
+	it('should delete whole object', async () => {
+		const result = await _os.delete(`1`);
+
+		should.not.exist(result);
+
+		let obj;
+		try {
+			obj = await _os.get('1');
+		}
+		catch(e){
+			should.exist(e);
+		}
+		should.not.exist(obj);
+	});
 });

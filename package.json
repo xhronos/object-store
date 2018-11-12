@@ -4,7 +4,9 @@
   "description": "provides access to a store of JSON objects via uri-path notation",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/eslint . && node_modules/.bin/mocha"
+    "test": "npm run lint && npm run mocha",
+    "mocha": "node_modules/.bin/mocha",
+    "lint": "node_modules/.bin/eslint ."
   },
   "author": "Martin Lümkemann",
   "license": "MIT",
